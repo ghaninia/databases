@@ -1,4 +1,4 @@
-<div align="right" style="direction:rtl">
+<div align="right" dir="rtl">
 <h1>دیتابیس های پرکاربرد</h1>
 <ul>
     <li>
