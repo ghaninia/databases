@@ -1,47 +1,18 @@
-<div align="right" dir="rtl">
-<h1>دیتابیس های پرکاربرد</h1>
-<ul>
-    <li>
-        موقعیت جغرافیایی ایران
-        <ul>
-            <li>لیست کامل استان ها</li>
-            <li>لیست کامل شهرستان ها</li>
-            <li>لیست مناطق شهری</li>
-            <li>لیست استان های همجوار</li>
-        </ul>
-    </li>
-    <li>
-        لیست کامل رنگ ها
-        <ul>
-            <li>کد های hex</li>
-            <li>نام لاتین</li>
-            <li>نام فارسی</li>
-        </ul>
-    </li>
-    <li>
-        لیست کامل رشته های تحصیلی
-        <ul>
-            <li>دیپلمای دانشگاهی</li>
-            <li>کاردانی پیوسته</li>
-            <li>کاردانی ناپیوسته</li>          <li>کارشناسی پیوسته</li>
-            <li>کارشناسی ناپیوسته</li>
-            <li>کارشناسی ارشد پیوسته</li>
-            <li>کارشناسی ارشد ناپیوسته</li>
-            <li>دکتری پیوسته</li>
-            <li>دکتری عمومی</li>
-            <li>دکتری دستیاری</li>
-            <li>دکتری تخصصی</li>
-        </ul>
-    </li>
-    <li>
-        ضرب المثل های فارسی
-    </li>
-    <li>
-        لیست نام های ایرانی 
-        <ul>
-            <li>همراه با توضیحات مختصر</li>
-            <li>نوع جنسیت</li>
-        <ul>
-    </li>
-</ul>
-</div>
+# 📚 Introduction
+
+Welcome to this repository! This project contains a collection of common databases that provide users with access to various information, including:
+
+- Geographic locations of Iran
+- Complete lists of colors
+- Academic fields
+- Persian proverbs
+- Iranian names
+
+These databases can be utilized in different projects, including software development and research.
+
+For more detailed information, you can check the following documents:
+
+- [دیتابیس های پرکاربرد (فارسی)](README.fa.md)
+- [Common Databases (English)](README.en.md)
+
+We hope you find this repository useful!
