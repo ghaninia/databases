@@ -8,7 +8,7 @@
 
 <h2 id="introduction">Introduction</h2>
 <p>
-    This repository contains a collection of common databases that help users access various information, including geographic locations, colors, academic fields, and Persian proverbs. These databases can be utilized in different projects, including software development and research.
+    This repository contains a collection of common databases that help users access various information, including geographic locations, colors, academic fields, Persian proverbs, and Iranian skills. These databases can be utilized in different projects, including software development and research.
 </p>
 
 <ul>
@@ -53,6 +53,12 @@
         <ul>
             <li>📖 With brief descriptions</li>
             <li>🚻 Gender type</li>
+        </ul>
+    </li>
+    <li>
+        💼 Iranian Skills
+        <ul>
+            <li>✅ List of various skills</li>
         </ul>
     </li>
 </ul>

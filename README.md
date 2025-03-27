@@ -7,6 +7,7 @@ Welcome to this repository! This project contains a collection of common databas
 - Academic fields
 - Persian proverbs
 - Iranian names
+- Iranian skills
 
 These databases can be utilized in different projects, including software development and research.
 
