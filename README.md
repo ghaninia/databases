@@ -8,6 +8,7 @@ Welcome to this repository! This project contains a collection of common databas
 - Persian proverbs
 - Iranian names
 - Iranian skills
+- Words and phrases
 
 These databases can be utilized in different projects, including software development and research.
 

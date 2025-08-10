@@ -61,5 +61,12 @@
             <li>✅ List of various skills</li>
         </ul>
     </li>
+    <li>
+        📖 Words and Phrases 
+        <ul>
+            <li>🔤 Common emotional words and phrases in Persian</li>
+            <li> 🔍 Tags for easy search</li>
+        </ul>
+    </li>
 </ul>
 </div> 
