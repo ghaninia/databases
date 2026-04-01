@@ -19,31 +19,6 @@ For more detailed information, you can check the following documents:
 
 We hope you find this repository useful!
 
-## Running The App
+### Live Preview
 
-The React viewer app is in the `app/` directory.
-
-### Option 1: Run from `app/` directory
-
-```bash
-cd app
-npm install
-npm run dev
-```
-
-### Option 2: Run from repository root
-
-```bash
-npm --prefix ./app install
-npm --prefix ./app run dev
-```
-
-By default, Vite prints the local URL in terminal (for example: `http://127.0.0.1:5173/`).
-
-### Build for production
-
-```bash
-npm --prefix ./app run build
-```
-
-Important: do not run `npm run dev` from repository root without `--prefix ./app`, because there is no `package.json` at root for the app runtime.
+https://ghaninia-databases.vercel.app/
