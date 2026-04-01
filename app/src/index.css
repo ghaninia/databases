@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-bold: 'vazirmatnblack';
+  --palette-accent: #f5b754;
+  --palette-dark: rgba(30, 34, 63, 1);
+  --palette-cream: rgba(252, 244, 204, 1);
+  --palette-white: rgba(255, 255, 255, 1);
+  --primary: #1b1b1b;
+  --secondary: var(--palette-accent);
+  --neutral: var(--palette-cream);
+  --shine: rgba(233, 88, 52, 0.95);
+  --red: rgba(233, 88, 52, 1);
+  --green: #2e8c36;
+  --background: var(--primary);
+  --foreground: var(--palette-white);
+  --cover: rgba(252, 244, 204, 0.08);
+  --cover-2: rgba(252, 244, 204, 0.15);
+  --border: rgba(255, 255, 255, 0.08);
+  --white-light: rgba(255, 255, 255, 0.85);
+  --white-8: rgba(255, 255, 255, 0.08);
+  --white: rgba(255, 255, 255, 1);
+  --black: rgba(0, 0, 0, 1);
+  --sidebar: var(--primary);
+  --sidebar-foreground: var(--secondary);
+  --sidebar-primary: hsl(240 5.9% 10%);
+  --sidebar-primary-foreground: var(--foreground);
+  --sidebar-accent: var(--neutral);
+  --sidebar-accent-foreground: var(--primary);
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: rgba(233, 88, 52, 0.6);
+  --hero-slogan-bg: #000000;
+  --hero-slogan-color: #ffffff;
+  --body: #f5b754;
+  --bg-1: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.3);
+  --orange: #f5b754;
+  --flame-light: #ffeb3b;
+  --flame-dark: #ff9800;
+  --bg-2: rgba(245, 183, 84, 0.1);
+  --bg-3: rgba(245, 183, 84, 0.2);
+  --bg-4: rgba(245, 183, 84, 0.3);
+}
+
+:root[data-theme='light'] {
+  --primary: #fcf4cc;
+  --secondary: #e95834;
+  --neutral: #1e223f;
+  --background: rgb(244 244 244 / 85%)ت;
+  --foreground: #1e223f;
+  --cover: rgba(30, 34, 63, 0.06);
+  --cover-2: rgba(30, 34, 63, 0.1);
+  --border: rgba(30, 34, 63, 0.12);
+  --white-light: rgba(30, 34, 63, 0.85);
+  --white-8: rgba(30, 34, 63, 0.08);
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1e223f;
+  --hero-slogan-bg: #ffffff;
+  --hero-slogan-color: #1e223f;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    @apply m-0 font-vazir antialiased;
+    direction: rtl;
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary) transparent;
+  }
+}
