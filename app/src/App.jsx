@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
+import { NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ColorsPage from './pages/ColorsPage';
 import GradesPage from './pages/GradesPage';
@@ -31,6 +31,23 @@ function getInitialTheme() {
 
 function App() {
   const [theme, setTheme] = useState(getInitialTheme);
+  const location = useLocation();
+
+  useEffect(() => {
+    const pageTitles = {
+      '/': 'خانه',
+      '/colors': 'رنگ ها',
+      '/grades': 'رشته ها',
+      '/names': 'نام ها',
+      '/proverbs': 'ضرب المثل',
+      '/skills': 'مهارت ها',
+      '/states': 'موقعیت ها',
+      '/words': 'متن ها',
+    };
+
+    const activeTitle = pageTitles[location.pathname] ?? 'خانه';
+    document.title = `${activeTitle} | Data Explorer`;
+  }, [location.pathname]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
