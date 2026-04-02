@@ -50,7 +50,7 @@ export default function NamesPage() {
       return matchGender && matchRegistered && matchOrigin && matchQuery;
     });
 
-    if (advancedEnabled && advancedTerms.length > 0) {
+    if (advancedEnabled) {
       list = list
         .map((item) => {
           const advancedMatch = getCombinedAdvancedMatch(item.persian_name, advancedTerms);
@@ -58,8 +58,11 @@ export default function NamesPage() {
             ...item,
             _advancedMatch: advancedMatch,
           };
-        })
-        .filter((item) => item._advancedMatch.score >= advancedThreshold);
+        });
+    }
+
+    if (advancedEnabled && advancedTerms.length > 0) {
+      list = list.filter((item) => item._advancedMatch.score >= advancedThreshold);
     }
 
     if (advancedEnabled && advancedTerms.length > 0) {
