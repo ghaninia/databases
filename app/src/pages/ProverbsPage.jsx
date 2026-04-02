@@ -124,16 +124,6 @@ export default function ProverbsPage() {
           </button>
         </div>
       </div>
-
-      <div className="flex flex-wrap gap-2">
-        <span className="rounded-full border border-borderc bg-cover px-3 py-1 text-xs">
-          کل: {dataStore.proverbs.length.toLocaleString('fa-IR')}
-        </span>
-        <span className="rounded-full border border-borderc bg-cover px-3 py-1 text-xs">
-          نتیجه: {filtered.length.toLocaleString('fa-IR')}
-        </span>
-      </div>
-
       <ol className="space-y-2">
         {items.map((item, index) => (
           <li key={`${item}-${index}`} className="animate-fade-up rounded-xl border border-borderc bg-cover px-4 py-3 text-sm leading-7">
