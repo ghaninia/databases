@@ -90,14 +90,6 @@ export default function NamesPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const start = (page - 1) * PAGE_SIZE;
   const items = filtered.slice(start, start + PAGE_SIZE);
-  const activeFiltersCount = [
-    query.trim().length > 0,
-    gender !== 'all',
-    registered !== 'all',
-    origin !== 'all',
-    sort !== 'name',
-    advancedEnabled && advancedTerms.length > 0,
-  ].filter(Boolean).length;
 
   function resetAllFilters() {
     setQuery('');
@@ -133,7 +125,7 @@ export default function NamesPage() {
       </div>
 
       <div className="space-y-3 rounded-2xl border border-borderc bg-cover p-4">
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3">
           <div className="relative">
             <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-[color:var(--white-light)]">
               جستجو
@@ -145,33 +137,6 @@ export default function NamesPage() {
               onChange={(event) => setQuery(event.target.value)}
             />
           </div>
-
-          <button
-            type="button"
-            className={`h-12 w-full rounded-xl border px-4 text-sm transition ${
-              advancedExpanded
-                ? 'border-secondary bg-cover2 text-secondary'
-                : 'border-borderc bg-cover2 text-[color:var(--white-light)] hover:border-secondary hover:text-secondary'
-            }`}
-            onClick={() => setAdvancedExpanded((value) => !value)}
-          >
-            {advancedExpanded ? 'بستن جستجوی پیشرفته' : 'باز کردن جستجوی پیشرفته'}
-          </button>
-
-          <div className="flex h-12 w-full items-center justify-between gap-2 rounded-xl border border-borderc bg-cover2 px-3 text-xs text-[color:var(--white-light)]">
-            <span>فیلتر فعال</span>
-            <span className="rounded-full border border-secondary/50 px-2 py-0.5 text-secondary">
-              {activeFiltersCount.toLocaleString('fa-IR')}
-            </span>
-          </div>
-
-          <button
-            type="button"
-            className="h-12 w-full rounded-xl border border-borderc bg-cover2 px-4 text-sm text-[color:var(--white-light)] transition hover:border-secondary hover:text-secondary"
-            onClick={resetAllFilters}
-          >
-            پاک‌سازی فیلترها
-          </button>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -215,27 +180,42 @@ export default function NamesPage() {
           </select>
         </div>
 
+        <div className="grid gap-3 sm:grid-cols-2">
+          <button
+            type="button"
+            className={`h-12 w-full rounded-xl border px-4 text-sm transition ${
+              advancedExpanded
+                ? 'border-secondary bg-cover2 text-secondary'
+                : 'border-borderc bg-cover2 text-[color:var(--white-light)] hover:border-secondary hover:text-secondary'
+            }`}
+            onClick={() => {
+              setAdvancedExpanded((value) => {
+                const next = !value;
+                setAdvancedEnabled(next);
+                return next;
+              });
+            }}
+          >
+            {advancedExpanded ? 'بستن جستجوی پیشرفته' : 'جستجوی پیشرفته'}
+          </button>
+
+          <button
+            type="button"
+            className="h-12 w-full rounded-xl border border-[color:var(--red)] bg-[color:rgba(233,88,52,0.1)] px-4 text-sm text-[color:var(--red)] transition hover:bg-[color:var(--red)] hover:text-[color:var(--white)]"
+            onClick={resetAllFilters}
+          >
+            پاکسازی فیلتر
+          </button>
+        </div>
+
         {advancedExpanded ? (
           <div className="rounded-xl border border-borderc bg-cover2 p-3">
-            <div className="grid gap-3 md:grid-cols-[auto_minmax(0,1fr)] md:items-center">
-              <label className="flex items-center gap-2 rounded-xl border border-borderc bg-cover px-3 py-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={advancedEnabled}
-                  onChange={(event) => setAdvancedEnabled(event.target.checked)}
-                />
-                فعال
-              </label>
-              <p className="text-xs text-[color:var(--white-light)]">
-                جستجوی BFS/DFS روی همه عبارت های ورودی انجام می شود و خروجی بر اساس مچ ترکیبی رتبه بندی می شود.
-              </p>
-            </div>
 
             <div className="mt-3 grid gap-3 md:grid-cols-[minmax(0,1fr)_220px]">
               <div className="space-y-2">
                 <input
                   className="w-full rounded-xl border border-borderc bg-cover px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-[color:var(--white-light)] focus:border-secondary disabled:opacity-50"
-                  placeholder="مثال: احسان / سحر یا حدیث, امین"
+                  placeholder="مثال: احسان / سحر"
                   value={advancedQuery}
                   onChange={(event) => setAdvancedQuery(event.target.value)}
                   disabled={!advancedEnabled}
