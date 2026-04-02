@@ -4,6 +4,32 @@ import { getCombinedAdvancedMatch, tokenizeAdvancedQuery } from '../lib/advanced
 import Pagination from '../components/Pagination';
 
 const PAGE_SIZE = 18;
+const FAVORITES_STORAGE_KEY = 'favorite-names-v1';
+
+function getNameKey(item) {
+  return `${String(item.persian_name)}|${String(item.english_name)}`;
+}
+
+function HeartIcon({ filled, className = 'h-4 w-4' }) {
+  return (
+    <svg viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} className={className} aria-hidden="true">
+      <path
+        d="M12 21s-6.716-4.35-9.193-8.088C.86 9.912 2.09 6 6.03 6c2.157 0 3.414 1.157 3.97 2.09C10.556 7.157 11.813 6 13.97 6c3.94 0 5.17 3.912 3.223 6.912C18.716 16.65 12 21 12 21z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function CloseIcon({ className = 'h-4 w-4' }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 export default function NamesPage() {
   const [query, setQuery] = useState('');
@@ -16,6 +42,8 @@ export default function NamesPage() {
   const [origin, setOrigin] = useState('all');
   const [sort, setSort] = useState('name');
   const [page, setPage] = useState(1);
+  const [likedNameKeys, setLikedNameKeys] = useState([]);
+  const [favoritesModalOpen, setFavoritesModalOpen] = useState(false);
 
   const advancedTerms = useMemo(() => tokenizeAdvancedQuery(advancedQuery), [advancedQuery]);
 
@@ -90,9 +118,51 @@ export default function NamesPage() {
     setPage(1);
   }, [query, gender, registered, origin, sort, advancedEnabled, advancedQuery, advancedThreshold]);
 
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(FAVORITES_STORAGE_KEY);
+      if (!raw) {
+        return;
+      }
+
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        setLikedNameKeys(parsed.filter((item) => typeof item === 'string'));
+      }
+    } catch {
+      setLikedNameKeys([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(likedNameKeys));
+    } catch {
+      // Ignore storage errors (e.g., private mode quota)
+    }
+  }, [likedNameKeys]);
+
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const start = (page - 1) * PAGE_SIZE;
   const items = filtered.slice(start, start + PAGE_SIZE);
+  const favoriteNames = useMemo(() => {
+    const likesSet = new Set(likedNameKeys);
+    return dataStore.names.filter((item) => likesSet.has(getNameKey(item)));
+  }, [likedNameKeys]);
+
+  function toggleLike(item) {
+    const key = getNameKey(item);
+    setLikedNameKeys((prev) => {
+      if (prev.includes(key)) {
+        return prev.filter((entry) => entry !== key);
+      }
+      return [...prev, key];
+    });
+  }
+
+  function isLiked(item) {
+    return likedNameKeys.includes(getNameKey(item));
+  }
 
   function resetAllFilters() {
     setQuery('');
@@ -121,9 +191,19 @@ export default function NamesPage() {
             <h2 className="text-xl font-bold text-secondary">Names</h2>
             <p className="mt-1 text-xs text-[color:var(--white-light)]">جستجوی هوشمند نام با فیلترهای ترکیبی</p>
           </div>
-          <p className="rounded-full border border-borderc bg-cover2 px-3 py-1 text-sm text-[color:var(--white-light)]">
-            {filtered.length.toLocaleString('fa-IR')} نام
-          </p>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className="inline-flex items-center gap-1.5 rounded-full border border-secondary bg-cover2 px-3 py-1 text-xs text-secondary transition hover:bg-cover"
+              onClick={() => setFavoritesModalOpen(true)}
+            >
+              <HeartIcon filled className="h-3.5 w-3.5" />
+              علاقه مندی ها: {favoriteNames.length.toLocaleString('fa-IR')}
+            </button>
+            <p className="rounded-full border border-borderc bg-cover2 px-3 py-1 text-sm text-[color:var(--white-light)]">
+              {filtered.length.toLocaleString('fa-IR')} نام
+            </p>
+          </div>
         </div>
       </div>
 
@@ -286,11 +366,25 @@ export default function NamesPage() {
           >
             <div className="flex items-start justify-between gap-2">
               <h3 className="text-lg font-semibold text-secondary">{item.persian_name}</h3>
-              {advancedEnabled && item._advancedMatch ? (
-                <span className="rounded-full border border-secondary/60 bg-cover2 px-2.5 py-1 text-[11px] text-secondary">
-                  {item._advancedMatch.score.toLocaleString('fa-IR')}٪
-                </span>
-              ) : null}
+              <div className="flex items-center gap-2">
+                {advancedEnabled && item._advancedMatch ? (
+                  <span className="rounded-full border border-secondary/60 bg-cover2 px-2.5 py-1 text-[11px] text-secondary">
+                    {item._advancedMatch.score.toLocaleString('fa-IR')}٪
+                  </span>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => toggleLike(item)}
+                  className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] transition ${
+                    isLiked(item)
+                      ? 'border-[color:var(--red)] bg-[color:rgba(233,88,52,0.1)] text-[color:var(--red)]'
+                      : 'border-borderc bg-cover2 text-[color:var(--white-light)] hover:border-secondary hover:text-secondary'
+                  }`}
+                >
+                  <HeartIcon filled={isLiked(item)} className="h-3.5 w-3.5" />
+                  {isLiked(item) ? 'لایک شده' : 'لایک'}
+                </button>
+              </div>
             </div>
             <p className="mt-2 text-sm leading-7 text-[color:var(--white-light)]">{item.description}</p>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -314,6 +408,64 @@ export default function NamesPage() {
       )}
 
       <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+
+      {favoritesModalOpen ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setFavoritesModalOpen(false)}
+        >
+          <div
+            className="max-h-[82vh] w-full max-w-2xl overflow-hidden rounded-2xl border border-borderc bg-[color:var(--primary)] shadow-[0_28px_80px_rgba(0,0,0,0.45)]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-borderc px-4 py-3">
+              <h3 className="text-base font-semibold text-secondary">
+                لیست علاقه مندی ها ({favoriteNames.length.toLocaleString('fa-IR')})
+              </h3>
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 rounded-lg border border-borderc bg-cover2 px-3 py-1.5 text-xs text-[color:var(--white-light)] transition hover:border-secondary hover:text-secondary"
+                onClick={() => setFavoritesModalOpen(false)}
+              >
+                <CloseIcon className="h-3.5 w-3.5" />
+                بستن
+              </button>
+            </div>
+
+            <div className="max-h-[60vh] space-y-2 overflow-y-auto p-4">
+              {favoriteNames.length === 0 ? (
+                <p className="rounded-xl border border-borderc bg-cover p-4 text-center text-sm text-[color:var(--white-light)]">
+                  هنوز نامی را لایک نکرده اید.
+                </p>
+              ) : (
+                favoriteNames.map((item) => (
+                  <div
+                    key={getNameKey(item)}
+                    className="flex items-center justify-between rounded-xl border border-borderc bg-cover p-3"
+                  >
+                    <div>
+                      <p className="font-medium text-secondary">{item.persian_name}</p>
+                      <p className="mt-1 text-xs text-[color:var(--white-light)]">
+                        {item.english_name} - {item.origin}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 rounded-lg border border-[color:var(--red)] bg-[color:rgba(233,88,52,0.1)] px-3 py-1.5 text-xs text-[color:var(--red)] transition hover:bg-[color:var(--red)] hover:text-[color:var(--white)]"
+                      onClick={() => toggleLike(item)}
+                    >
+                      <HeartIcon filled className="h-3.5 w-3.5" />
+                      حذف از لیست
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }
