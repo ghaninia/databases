@@ -39,42 +39,40 @@ function App() {
 
   return (
     <div className="mx-auto min-h-screen w-full max-w-7xl px-3 py-4 md:px-5">
-      <div className="grid gap-3 lg:grid-cols-[260px_minmax(0,1fr)]">
-        <aside className="animate-fade-up relative flex overflow-hidden rounded-2xl border border-borderc bg-[var(--sidebar)] p-4 backdrop-blur-sm lg:sticky lg:top-4 lg:h-fit lg:flex-col">
+      <div className="grid gap-3 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <aside className="animate-fade-up relative flex flex-col overflow-hidden rounded-2xl border border-borderc bg-[var(--sidebar)] p-3 backdrop-blur-sm sm:p-4 lg:sticky lg:top-4 lg:h-fit">
           <div className="pointer-events-none absolute -left-10 -top-10 h-28 w-28 rounded-full bg-secondary/20 blur-2xl" />
 
-          <div className="relative mb-4 rounded-xl border border-borderc bg-cover p-3">
+          <div className="relative mb-3 rounded-xl border border-borderc bg-cover p-3">
             <p className="text-xs tracking-wide text-[color:var(--white-light)]">SQL DASHBOARD</p>
             <h1 className="mt-1 text-xl font-bold text-secondary">Data Explorer</h1>
-            <p className="mt-2 text-sm text-[color:var(--white-light)]">مرور سریع دیتاست های SQL</p>
+            <p className="mt-2 hidden text-sm text-[color:var(--white-light)] sm:block">مرور سریع دیتاست های SQL</p>
           </div>
 
-          <nav className="grid gap-1.5">
+          <nav className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 lg:mx-0 lg:grid lg:gap-1.5 lg:overflow-visible lg:px-0 lg:pb-0">
             {navItems.map((item, index) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 end={item.to === '/'}
                 className={({ isActive }) =>
-                  `group flex items-center justify-between rounded-xl border px-3 py-2 transition ${
+                  `group min-w-[138px] shrink-0 rounded-xl border px-3 py-2 transition lg:min-w-0 ${
                     isActive
                       ? 'border-secondary bg-cover2 text-secondary'
                       : 'border-transparent text-[color:var(--white-light)] hover:border-borderc hover:bg-cover'
                   }`
                 }
               >
-                <div>
+                <div className="flex items-center justify-between gap-3 lg:block">
                   <p className="text-sm font-medium">{item.label}</p>
                   <p className="text-[11px] text-[color:var(--white-light)]">{item.hint}</p>
                 </div>
-                <span className="rounded-md bg-cover px-2 py-0.5 text-[11px] text-[color:var(--white-light)] group-hover:bg-cover2">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
+               
               </NavLink>
             ))}
           </nav>
 
-          <div className="mt-4 flex items-center gap-2 border-t border-borderc pt-4 lg:mt-auto">
+          <div className="mt-3 flex items-center justify-end gap-2 border-t border-borderc pt-3 lg:mt-auto lg:justify-start lg:pt-4">
             <button
               type="button"
               aria-label="تغییر تم"
