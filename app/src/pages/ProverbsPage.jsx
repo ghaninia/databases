@@ -11,6 +11,13 @@ export default function ProverbsPage() {
   const [sort, setSort] = useState('default');
   const [page, setPage] = useState(1);
 
+  function resetFilters() {
+    setQuery('');
+    setStartLetter('all');
+    setSize('all');
+    setSort('default');
+  }
+
   const letters = useMemo(() => {
     const set = new Set();
     dataStore.proverbs.forEach((item) => {
@@ -64,43 +71,58 @@ export default function ProverbsPage() {
         <p className="text-sm text-[color:var(--white-light)]">{filtered.length.toLocaleString('fa-IR')} ضرب‌المثل</p>
       </div>
 
-      <div className="grid gap-3 rounded-2xl border border-borderc bg-cover p-4 sm:grid-cols-2 xl:grid-cols-4">
-        <input
-          className="rounded-xl border border-borderc bg-cover2 px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-[color:var(--white-light)] focus:border-secondary sm:col-span-2"
-          placeholder="جستجو در متن ضرب‌المثل"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-        />
-        <select
-          className="rounded-xl border border-borderc bg-cover2 px-3 py-3 text-sm text-foreground outline-none transition focus:border-secondary"
-          value={startLetter}
-          onChange={(event) => setStartLetter(event.target.value)}
-        >
-          {letters.map((item) => (
-            <option key={item} value={item}>
-              {item === 'all' ? 'حرف شروع: همه' : `شروع با: ${item}`}
-            </option>
-          ))}
-        </select>
-        <select
-          className="rounded-xl border border-borderc bg-cover2 px-3 py-3 text-sm text-foreground outline-none transition focus:border-secondary"
-          value={size}
-          onChange={(event) => setSize(event.target.value)}
-        >
-          <option value="all">اندازه: همه</option>
-          <option value="short">کوتاه (تا ۵ کلمه)</option>
-          <option value="medium">متوسط (۶ تا ۱۰ کلمه)</option>
-          <option value="long">بلند (بیشتر از ۱۰ کلمه)</option>
-        </select>
-        <select
-          className="rounded-xl border border-borderc bg-cover2 px-3 py-3 text-sm text-foreground outline-none transition focus:border-secondary"
-          value={sort}
-          onChange={(event) => setSort(event.target.value)}
-        >
-          <option value="default">مرتب‌سازی: پیش‌فرض</option>
-          <option value="alphabet">مرتب‌سازی: الفبایی</option>
-          <option value="length">مرتب‌سازی: طول متن</option>
-        </select>
+      <div className="space-y-3 rounded-2xl border border-borderc bg-cover p-4">
+        <div className="relative">
+          <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-[color:var(--white-light)]">
+            جستجو
+          </span>
+          <input
+            className="h-12 w-full rounded-xl border border-borderc bg-cover2 px-4 pr-16 text-sm text-foreground outline-none transition placeholder:text-[color:var(--white-light)] focus:border-secondary"
+            placeholder="متن ضرب‌المثل"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <select
+            className="h-12 rounded-xl border border-borderc bg-cover2 px-3 text-sm text-foreground outline-none transition focus:border-secondary"
+            value={startLetter}
+            onChange={(event) => setStartLetter(event.target.value)}
+          >
+            {letters.map((item) => (
+              <option key={item} value={item}>
+                {item === 'all' ? 'حرف شروع: همه' : `شروع با: ${item}`}
+              </option>
+            ))}
+          </select>
+          <select
+            className="h-12 rounded-xl border border-borderc bg-cover2 px-3 text-sm text-foreground outline-none transition focus:border-secondary"
+            value={size}
+            onChange={(event) => setSize(event.target.value)}
+          >
+            <option value="all">اندازه: همه</option>
+            <option value="short">کوتاه (تا ۵ کلمه)</option>
+            <option value="medium">متوسط (۶ تا ۱۰ کلمه)</option>
+            <option value="long">بلند (بیشتر از ۱۰ کلمه)</option>
+          </select>
+          <select
+            className="h-12 rounded-xl border border-borderc bg-cover2 px-3 text-sm text-foreground outline-none transition focus:border-secondary"
+            value={sort}
+            onChange={(event) => setSort(event.target.value)}
+          >
+            <option value="default">مرتب‌سازی: پیش‌فرض</option>
+            <option value="alphabet">مرتب‌سازی: الفبایی</option>
+            <option value="length">مرتب‌سازی: طول متن</option>
+          </select>
+          <button
+            type="button"
+            className="h-12 rounded-xl border border-[color:var(--red)] bg-[color:rgba(233,88,52,0.1)] px-4 text-sm text-[color:var(--red)] transition hover:bg-[color:var(--red)] hover:text-[color:var(--white)]"
+            onClick={resetFilters}
+          >
+            پاکسازی فیلترها
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
