@@ -21,7 +21,16 @@ export function tokenizeAdvancedQuery(query) {
     .filter(Boolean);
 }
 
+const distanceCache = new Map();
+const scoreCache = new Map();
+const nameMatchCache = new Map();
+
 function damerauLevenshteinDistance(a, b) {
+  const key = `${a}|${b}`;
+  if (distanceCache.has(key)) {
+    return distanceCache.get(key);
+  }
+
   const source = normalizePersianText(a);
   const target = normalizePersianText(b);
 
@@ -69,7 +78,9 @@ function damerauLevenshteinDistance(a, b) {
     }
   }
 
-  return table[n][m];
+  const result = table[n][m];
+  distanceCache.set(key, result);
+  return result;
 }
 
 function lcsLength(a, b) {
@@ -226,9 +237,14 @@ function buildCandidateWindows(term, name) {
   const minLength = Math.max(1, termLength - 1);
   const maxLength = Math.min(normalizedName.length, termLength + 2);
 
-  for (let size = minLength; size <= maxLength; size += 1) {
-    for (let start = 0; start <= normalizedName.length - size; start += 1) {
+  // Limit the number of windows to improve performance
+  const maxWindows = 20;
+  let count = 1; // already added normalizedName
+
+  for (let size = minLength; size <= maxLength && count < maxWindows; size += 1) {
+    for (let start = 0; start <= normalizedName.length - size && count < maxWindows; start += 1) {
       windows.add(normalizedName.slice(start, start + size));
+      count += 1;
     }
   }
 
@@ -236,6 +252,11 @@ function buildCandidateWindows(term, name) {
 }
 
 function scorePair(term, candidate, fullName) {
+  const key = `${term}|${candidate}`;
+  if (scoreCache.has(key)) {
+    return scoreCache.get(key);
+  }
+
   const normalizedTerm = normalizePersianText(term);
   const normalizedCandidate = normalizePersianText(candidate);
   const normalizedFullName = normalizePersianText(fullName);
@@ -246,14 +267,11 @@ function scorePair(term, candidate, fullName) {
 
   const jaroScore = jaroWinklerSimilarity(normalizedTerm, normalizedCandidate) * 100;
   const diceScore = diceCoefficient(normalizedTerm, normalizedCandidate, 2) * 100;
-  const lcs = lcsLength(normalizedTerm, normalizedCandidate);
-  const lcsScore = ((2 * lcs) / (normalizedTerm.length + normalizedCandidate.length || 1)) * 100;
 
   let score =
-    (jaroScore * 0.35) +
-    (editScore * 0.3) +
-    (diceScore * 0.2) +
-    (lcsScore * 0.15);
+    (jaroScore * 0.4) +
+    (editScore * 0.35) +
+    (diceScore * 0.25);
 
   if (normalizedFullName.includes(normalizedTerm)) {
     score += 10;
@@ -263,10 +281,17 @@ function scorePair(term, candidate, fullName) {
     score += 6;
   }
 
-  return Math.min(100, score);
+  const result = Math.min(100, score);
+  scoreCache.set(key, result);
+  return result;
 }
 
 export function calculateNameMatch(term, name) {
+  const key = `${term}|${name}`;
+  if (nameMatchCache.has(key)) {
+    return nameMatchCache.get(key);
+  }
+
   const normalizedTerm = normalizePersianText(term);
   const normalizedName = normalizePersianText(name);
 
@@ -287,7 +312,9 @@ export function calculateNameMatch(term, name) {
     }
   }
 
-  return Math.round(best);
+  const result = Math.round(best);
+  nameMatchCache.set(key, result);
+  return result;
 }
 
 export function getCombinedAdvancedMatch(name, terms) {
